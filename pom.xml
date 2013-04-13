@@ -167,6 +167,17 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <configuration>
+              <archive>
+                  <manifestEntries>
+	                <Plugin-ChildFirstClassLoader>true</Plugin-ChildFirstClassLoader>
+	              </manifestEntries>
+              </archive>
+          </configuration>                
+      </plugin>
     </plugins>
   </build>
 

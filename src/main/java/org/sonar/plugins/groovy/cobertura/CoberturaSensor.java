@@ -20,13 +20,13 @@
 
 package org.sonar.plugins.groovy.cobertura;
 
+import java.io.File;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.AbstractCoverageExtension;
-import org.sonar.api.batch.CoverageExtension;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
-import org.sonar.api.batch.maven.DependsUponMavenPlugin;
 import org.sonar.api.batch.maven.MavenPluginHandler;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
@@ -34,20 +34,18 @@ import org.sonar.plugins.cobertura.api.AbstractCoberturaParser;
 import org.sonar.plugins.cobertura.api.CoberturaUtils;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
-import java.io.File;
-
-public class CoberturaSensor implements Sensor, DependsUponMavenPlugin, CoverageExtension {
-
+public class CoberturaSensor extends AbstractCoverageExtension implements Sensor {
   private static final Logger LOG = LoggerFactory.getLogger(CoberturaSensor.class);
 
   private CoberturaMavenPluginHandler handler;
 
-  public CoberturaSensor(CoberturaMavenPluginHandler handler) {
-    this.handler = handler;
+  public CoberturaSensor() {
+
   }
 
+  @Override
   public boolean shouldExecuteOnProject(Project project) {
-    return project.getAnalysisType().isDynamic(true) && Groovy.KEY.equals(project.getLanguageKey());
+	  return project.getAnalysisType().isDynamic(true) && Groovy.KEY.equals(project.getLanguageKey());
   }
 
   public void analyse(Project project, SensorContext context) {
@@ -58,9 +56,6 @@ public class CoberturaSensor implements Sensor, DependsUponMavenPlugin, Coverage
   }
 
   public MavenPluginHandler getMavenPluginHandler(Project project) {
-    if (project.getAnalysisType().equals(Project.AnalysisType.DYNAMIC)) {
-      return handler;
-    }
     return null;
   }
 
@@ -81,5 +76,4 @@ public class CoberturaSensor implements Sensor, DependsUponMavenPlugin, Coverage
   public String toString() {
     return "Groovy CoberturaSensor";
   }
-
 }
